@@ -4,6 +4,9 @@ from src.routes import recommend
 from src.core.dependencies import setup_dependencies
 from src.core.config import cfg
 from src.core.logging import LOGGING
+from rabbitmq_consumer import consume_rabbitmq
+from consumer import consume
+import asyncio
 import logging
 import uvicorn
 
@@ -32,6 +35,10 @@ def start_app(config):
 
 
 setup_dependencies(app)
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(consume())
 
 if __name__ == "__main__":
     start_app(cfg)

@@ -11,7 +11,7 @@ def read_data() -> pd.DataFrame:
     
     :return: Тренировочную выборку
     """
-    sales_train = pd.read_csv("csv.sales_train.csv")
+    sales_train = pd.read_csv("src/routes/csv/sales_train.csv")
     
     sales_train = sales_train[sales_train['item_price'] > 0]
     sales_train = sales_train[sales_train['item_cnt_day'] > 0]
@@ -187,9 +187,9 @@ def recommend_seasons_items(user_id:int, user_history:list, top_n=10) -> list:
     
     popular_items = get_popular(sales_train) # Датафрейм с самыми популярными товарами
     
-    all_recommendations = pd.read_csv("csv.all_recommendations.csv") # Датафрейм с информацией об истории рекомендаций пользователям
+    all_recommendations = pd.read_csv("src/routes/csv/all_recomendations.csv") # Датафрейм с информацией об истории рекомендаций пользователям
     
-    items = pd.read_csv("csv.items.csv") # Таблица для получения категорий товаров
+    items = pd.read_csv("src/routes/csv/items.csv") # Таблица для получения категорий товаров
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") # Время рекомендации
 
@@ -208,7 +208,7 @@ def recommend_seasons_items(user_id:int, user_history:list, top_n=10) -> list:
     else:
         # Для пользователей с историей покупок рекомендуем товары по схожести
         
-        sales_prod = pd.read_csv('csv.sales_prod.csv') # История покупок на нашем сервисе
+        sales_prod = pd.read_csv('src/routes/csv/sales_prod.csv') # История покупок на нашем сервисе
         
         if(len(sales_prod) < 10):
             bucket_id = random.randint(1, 2)

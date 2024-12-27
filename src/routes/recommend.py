@@ -4,7 +4,7 @@ from src.handlers.recommend import recommendHandlerABC
 from src.schemas.recommend import *
 from .recommendation_system import recommend_seasons_items
 
-from src.schemas.result import RecommendationResponse, RecommendationRequest
+from src.schemas.result import RecommendationResponse, RecommendationRequest, PredictPriceRequest
 from .predict_price import forecast_price1
 
 router = APIRouter()
@@ -47,19 +47,20 @@ def get_recommendations(request: RecommendationRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/model/predict")
-async def predict_price(item_id: int = Query(..., description="ID товара для предсказания цены")):
+
+@router.post("/model/predict")
+async def predict_price(request: PredictPriceRequest):
     """
     Эндпоинт для предсказания цены товара.
     """
     try:
+        item_id = request.item_id  # Получаем item_id из тела запроса
         # Вызов функции прогнозирования цены
         predicted_price = forecast_price1(item_id)
         if predicted_price == -1:
             raise HTTPException(status_code=404, detail="Нет данных для данного товара")
         
         return {
-            "item_id": item_id,
             "predicted_price": round(predicted_price, 2)
         }
     except Exception as e:

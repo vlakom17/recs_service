@@ -9,7 +9,7 @@ def read_data() -> pd.DataFrame:
   """
   Возвращает данные для прогноза
   """
-  sales_train = pd.read_csv("csv.sales_train.csv")
+  sales_train = pd.read_csv("src/routes/csv/sales_train.csv")
   
   sales_train = sales_train[sales_train['item_price'] > 0]
   sales_train = sales_train[sales_train['item_cnt_day'] > 0]
@@ -87,16 +87,17 @@ def forecast_price1(item_id:int) -> float:
   item_data_interpolated = item_data_resampled.interpolate(method ='linear')
   
   # Определение порядка интегрирования (d)
+  d = 0
   tmp_stationarity = item_data_interpolated
   try:
-    stationarity = test_stationarity(tmp_stationarity,'Price')
+    stationarity = test_stationarity(tmp_stationarity)
   except ValueError:
     stationarity = 1
     d = 0
   while (stationarity != 1):
     tmp_stationarity = make_stationary(tmp_stationarity)
     d += 1
-    stationarity = test_stationarity(tmp_stationarity,'Price')
+    stationarity = test_stationarity(tmp_stationarity)
   
   # Строим модель ARIMA (p, d, q) для данного товара
   model = ARIMA(item_data_interpolated, order=(1, d, 7)) 

@@ -4,7 +4,7 @@ import argparse
 class Config:
     log_level: str = "info"
     dbconnection: str = None
-    port: int = 8005
+    port: int = 8001
 
     def load(self, path: str):
         """Загружает конфигурацию из YAML-файла."""

@@ -11,6 +11,9 @@ class RecommendationRequest(BaseModel):
 class RecommendationResponse(BaseModel):
     recommended_products: List[str] = Field(..., description="Список рекомендованных товаров (ID товаров в виде строк)")
 
+class PredictPriceRequest(BaseModel):
+    item_id: int
+
 @dataclasses.dataclass
 class Error:
     reason: str
